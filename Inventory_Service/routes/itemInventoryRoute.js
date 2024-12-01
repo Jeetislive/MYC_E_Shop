@@ -12,7 +12,7 @@ itemInventoryRoute.put('/:itemId',itemInventoryController.updateItemById);
 itemInventoryRoute.delete('/:itemId',itemInventoryController.deleteItemById);
 
 //changes needed
-itemInventoryRoute.use('/:itemId/images/addImage', express.static('uploads')); // Serve static files// Upload route
+// Upload route
 itemInventoryRoute.post('/:itemId/images/addImage',upload.single('image'), itemInventoryController.addImage);
 itemInventoryRoute.delete('/:itemId/images/:imagesId',itemInventoryController.deleteImageById);
 export default itemInventoryRoute;

@@ -6,6 +6,8 @@ const app = express();
 const port = process.env.PORT || 3002;
 
 app.use(express.json({extended: true,}));
+// Serve static files
+app.use('/uploads', express.static('uploads')); 
 app.use('/api/inventory', indexInventoryRoute);
 //Error handling
 app.use(errorHandler);

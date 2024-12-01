@@ -21,7 +21,7 @@ const addColor = async(req,res,next) => {
 const getAllColors = async (req, res, next) => {
     try {
         const colors = await colorInventoryService.getAllColors();
-        res.json(colors);
+        res.status(200).json(colors);
     } catch (error) {
         console.error(error);
         next(error);
@@ -35,7 +35,7 @@ const getColorById = async (req, res, next) => {
         if (!color) {
             throw new AppError("Color not found", 404);
         }
-        res.json(color);
+        res.status(200).json(color);
     } catch (error) {
         console.error(error);
         next(error);
@@ -56,7 +56,7 @@ const updateColorById = async (req, res, next) => {
         if (!updated) {
             throw new AppError("Failed to update Color", 400);
         }
-        res.json({ message: 'Color updated successfully.' });
+        res.status(202).json({ message: 'Color updated successfully.' });
     } catch (error) {
         console.error(error);
         next(error);
@@ -73,7 +73,7 @@ const deleteColorById = async (req, res, next) => {
         if (!deleted) {
             throw new AppError("Failed to delete Color", 400);
         }
-        res.json({ message: 'Color deleted successfully.' });
+        res.status(202).json({ message: 'Color deleted successfully.' });
     } catch (error) {
         console.error(error);
         next(error);

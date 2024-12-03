@@ -78,16 +78,16 @@ const getItemById = async (itemId) => {
     }
 }
 
-const updateItem = async (itemId, item_name, description, price, stock_quantity, status, size_id, brand_id, color_id, created_at, updated_at) => {
+const updateItem = async (item_id, item_code, item_name, description, price, stock_quantity, status, size_id, brand_id, color_id) => {
     const conn = await db.getConnection();
     try {
         await conn.beginTransaction();
         const [result] = await conn.execute(
-            `UPDATE tbl_item_details SET item_name=?, description=?, price=?, stock_quantity=?, status=?, size_id=?, brand_id=?, color_id=? WHERE item_id=?`,
-            [item_name, description, price, stock_quantity, status, size_id, brand_id, color_id, itemId]
+            `UPDATE tbl_item_details SET item_code =?, item_name=?, description=?, price=?, stock_quantity=?, status=?, size_id=?, brand_id=?, color_id=? WHERE item_id=?`,
+            [item_code, item_name, description, price, stock_quantity, status, size_id, brand_id, color_id, item_id]
         );
         console.log("Item updated successfully!");
-        await client.set(`ItemCache:${itemId}`, JSON.stringify({
+        await client.set(`ItemCache:${item_id}`, JSON.stringify({
             "ItemName": item_name, 
             "description": description,
             "price": price,

@@ -21,7 +21,7 @@ const addItem = async(req,res,next) => {
 const getAllItems = async (req, res, next) => {
     try {
         const items = await itemInventoryService.getAllItems();
-        res.json(items);
+        res.status(200).json(items);
     } catch (error) {
         console.error(error);
         next(error);
@@ -35,7 +35,7 @@ const getItemById = async (req, res, next) => {
         if (!item) {
             throw new AppError("Item not found", 404);
         }
-        res.json(item);
+        res.status(200).json(item);
     } catch (error) {
         console.error(error);
         next(error);
@@ -45,18 +45,18 @@ const getItemById = async (req, res, next) => {
 const updateItemById = async (req, res, next) => {
     try {
         const {itemId} = req.params;
-        const { item_name, description, price, stock_quantity, status, size_id, brand_id, color_id} = req.body;
+        const { item_code, item_name, description, price, stock_quantity, status, size_id, brand_id, color_id} = req.body;
         if (!itemId) {
             throw new AppError("Item ID is required", 404);
         }
-        if (!item_name &&!description &&!price &&!stock_quantity &&!status &&!size_id &&!brand_id &&!color_id) {
+        if (!item_code || !item_name &&!description &&!price &&!stock_quantity &&!status &&!size_id &&!brand_id &&!color_id) {
             throw new AppError("No fields to update", 404);
         }
-        const updated = await itemInventoryService.updateItem(itemId, item_name, description, price, stock_quantity, status, size_id, brand_id, color_id);
+        const updated = await itemInventoryService.updateItem(itemId, item_code, item_name, description, price, stock_quantity, status, size_id, brand_id, color_id);
         if (!updated) {
             throw new AppError("Failed to update Item", 400);
         }
-        res.json({ message: 'Item updated successfully.' });
+        res.status(202).json({ message: 'Item updated successfully.' });
     } catch (error) {
         console.error(error);
         next(error);
@@ -73,13 +73,12 @@ const deleteItemById = async (req, res, next) => {
         if (!deleted) {
             throw new AppError("Failed to delete Item", 400);
         }
-        res.json({ message: 'Item deleted successfully.' });
+        res.status(202).json({ message: 'Item deleted successfully.' });
     } catch (error) {
         console.error(error);
         next(error);
     }
 }
-
 const addImage = async (req, res) => {
     try {
       if (!req.file) {
@@ -91,6 +90,11 @@ const addImage = async (req, res) => {
       const imageLocation = req.file.path;
       // Pass details to the service layer
       const result = await itemInventoryService.addImage(itemId,imageName, imageLocation);
+      if (!result) {
+        throw new AppError("Failed to add Image", 400);
+      }
+      console.log("Image added");
+      
       res.status(201).json({ message: 'File uploaded successfully', imageId: result });
     } catch (error) {
         console.error(error);
